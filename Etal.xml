@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<ETAL>
+	<FILE>ScheduledChangeDefaultMenuLevel.moc</FILE>
+	<OUTPUTFILE>output.txt</OUTPUTFILE>
+	<NAME>Scheduled Change Default Menu Level</NAME>
+	
+	<CREATED>28/09/2018</CREATED>
+	<LASTMODIFIED>28/09/2018</LASTMODIFIED>
+	<MINVERID>5540</MINVERID>
+	<AUTHOR>Michael.Radleys</AUTHOR>
+</ETAL>

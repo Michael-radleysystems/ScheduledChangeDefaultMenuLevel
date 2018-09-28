@@ -1,0 +1,33 @@
+local g_nTimerID;
+local g_tDateLastDone = {day = 0};
+
+function OnInit()
+{
+	// timer once per minute
+	g_nTimerID = ICR_StartTimer(60000);
+}
+
+function OnTimer(nTimerID,nSysTimer)
+{
+	// is it our timer?
+	if(nTimerID == g_nTimerID)
+	{
+		//TODO check the time set lunch page
+		
+		//TODO check the time set dinner page
+		
+		//TODO check the time
+		//reset lunch and dinner check
+		//set breakfast page
+		//set day check
+
+
+		//Example for time checking
+		local tDate = date();
+		if (g_tDateLastDone.day == tDate.day)
+		{
+			// already done it today
+			return;
+		}
+	}
+}
