@@ -1,5 +1,11 @@
 local g_nTimerID;
 local g_tDateLastDone = {day = 0};
+local nBreakfastPage = 0;
+local nLunchPage = 0;
+local nDinnerPage = 0;
+local bBreakfastDone = false;
+local bLunchDone = false;
+local bDinnerDone = false; 
 
 function OnInit()
 {
@@ -9,19 +15,32 @@ function OnInit()
 
 function OnTimer(nTimerID,nSysTimer)
 {
+	print(nSysTimer);
 	// is it our timer?
 	if(nTimerID == g_nTimerID)
 	{
 		//TODO check the time set lunch page
+		if()
+		{
+			
+		}
 		
 		//TODO check the time set dinner page
+		if()
+		{
+			
+		}
 		
 		//TODO check the time
 		//reset lunch and dinner check
 		//set breakfast page
 		//set day check
+		if()
+		{
+			
+		}
 
-
+		/*
 		//Example for time checking
 		local tDate = date();
 		if (g_tDateLastDone.day == tDate.day)
@@ -29,5 +48,6 @@ function OnTimer(nTimerID,nSysTimer)
 			// already done it today
 			return;
 		}
+		*/
 	}
 }
