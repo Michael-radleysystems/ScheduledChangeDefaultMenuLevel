@@ -5,28 +5,28 @@ local nLunchPage = 0;
 local nDinnerPage = 0;
 local bBreakfastDone = false;
 local bLunchDone = false;
-local bDinnerDone = false; 
+local bDinnerDone = false;
 
 function OnInit()
 {
 	// timer once per minute
-	g_nTimerID = ICR_StartTimer(60000);
+	g_nTimerID = ICR_StartTimer(10000);
 }
 
 function OnTimer(nTimerID,nSysTimer)
 {
-	print(nSysTimer);
+	
 	// is it our timer?
 	if(nTimerID == g_nTimerID)
 	{
 		//TODO check the time set lunch page
-		if()
+		if(bBreakfastDone)
 		{
 			
 		}
 		
 		//TODO check the time set dinner page
-		if()
+		if(bLunchDone)
 		{
 			
 		}
@@ -35,7 +35,7 @@ function OnTimer(nTimerID,nSysTimer)
 		//reset lunch and dinner check
 		//set breakfast page
 		//set day check
-		if()
+		if(bDinnerDone)
 		{
 			
 		}
@@ -51,3 +51,73 @@ function OnTimer(nTimerID,nSysTimer)
 		*/
 	}
 }
+
+/*
+ * Create a Time class for doing time comparison 
+ * 
+ */
+
+class Time
+{
+	hour = 0;
+	min = 0;
+	sec = 0;
+	
+	constructor(tDate)
+	{
+		hour = tDate.hour;
+		min = tDate.min;
+		sec = tDate.sec;
+	}
+
+	function compareTo(tTime)
+	{
+		if(hour < tTime.hour)
+		{
+			return -1; // return negative is this object is smaller
+		}
+		
+		if(hour > tTime.hour)
+		{
+			return 1; // return positive is this object is bigger
+		}
+		
+		if(hour == tTime.hour)
+		{
+			if(min < tTime.min)
+			{
+				return -1; // return negative is this object is smaller
+			}
+			
+			if(min > tTime.min)
+			{
+				return 1; // return positive is this object is bigger
+			}
+			
+			if(min == tTime.min)
+			{
+				if(sec < tTime.sec)
+				{
+					return -1; // return negative is this object is smaller
+				}
+				
+				if(sec > tTime.sec)
+				{
+					return 1; // return positive is this object is bigger
+				}
+				
+				if(sec == tTime.sec)
+				{
+					return 0; // return zero is this object is the same as the passed in object
+				}
+			}
+		}
+	}
+	
+	function tostring()
+	{
+		return hour+":"+min+"."+sec; // return contents as String
+	}
+}
+
+
