@@ -9,6 +9,7 @@ local bDinnerDone = false;
 local cBreakfastTime;
 local cLunchTime;
 local cDinnerTime;
+local cHourBefore;
 
 function OnInit()
 {
@@ -18,9 +19,23 @@ function OnInit()
 	cBreakfastTime = Time({hour = 06, min = 00, sec = 00});
 	cLunchTime = Time({hour = 11, min = 00, sec = 00});
 	cDinnerTime = Time({hour = 17, min = 00, sec = 00});
+	cHourBefore = Time(cBreakfastTime);
+	cHourBefore.minusHour(1);
 	
+	testBed();
+}
+
+function testBed()
+{
+	print("Printing Time class without explicit call of tostring: "+cBreakfastTime);
+	print("cBreakfastTime is instance of Time()"+ (cBreakfastTime instanceof Time));
+	local teaTime = {hours = 0, min = 0, sec = 0}
+	//cBreakfastTime.compareTo(teaTime);
+	print(cBreakfastTime.compareTo(cDinnerTime));
+	print("Hour before: "cHourBefore);
 	
 }
+
 
 function OnTimer(nTimerID,nSysTimer)
 {	
@@ -98,53 +113,60 @@ class Time
 
 	function compareTo(tTime)
 	{
-		print("Inside Time() this object: "+hour+":"+min+"."+sec+" compareTo passed in Time object: "+tTime.tostring());
-		if(hour < tTime.hour)
+		if(tTime instanceof Time)
 		{
-			print("Inside hour < ");
-			return -1; // return negative is this object is smaller			
-		}
-		
-		if(hour > tTime.hour)
-		{
-			print("Inside hour > ");
-			return 1; // return positive is this object is bigger
-		}
-		
-		if(hour == tTime.hour)
-		{
-			if(min < tTime.min)
+			print("Inside Time() this object: "+hour+":"+min+"."+sec+" compareTo passed in Time object: "+tTime.tostring());
+			if(hour < tTime.hour)
 			{
-				print("Inside min < ");
-				return -1; // return negative is this object is smaller
+				print("Inside hour < ");
+				return -1; // return negative is this object is smaller			
 			}
 			
-			if(min > tTime.min)
+			if(hour > tTime.hour)
 			{
-				print("Inside min > ");
+				print("Inside hour > ");
 				return 1; // return positive is this object is bigger
 			}
 			
-			if(min == tTime.min)
+			if(hour == tTime.hour)
 			{
-				if(sec < tTime.sec)
+				if(min < tTime.min)
 				{
-					print("Inside sec < ");
+					print("Inside min < ");
 					return -1; // return negative is this object is smaller
 				}
 				
-				if(sec > tTime.sec)
+				if(min > tTime.min)
 				{
-					print("Inside sec > ");
+					print("Inside min > ");
 					return 1; // return positive is this object is bigger
 				}
 				
-				if(sec == tTime.sec)
+				if(min == tTime.min)
 				{
-					print("Inside sec = ");
-					return 0; // return zero is this object is the same as the passed in object
+					if(sec < tTime.sec)
+					{
+						print("Inside sec < ");
+						return -1; // return negative is this object is smaller
+					}
+					
+					if(sec > tTime.sec)
+					{
+						print("Inside sec > ");
+						return 1; // return positive is this object is bigger
+					}
+					
+					if(sec == tTime.sec)
+					{
+						print("Inside sec = ");
+						return 0; // return zero is this object is the same as the passed in object
+					}
 				}
 			}
+		}
+		else
+		{
+			throw (tTime+" is not of type Time");
 		}
 	}
 	
@@ -176,10 +198,9 @@ class Time
 		}
 	}
 	
-	function tostring()
+	function _tostring()
 	{
 		return hour+":"+min+"."+sec; // return contents as String
 	}
 }
-
 
