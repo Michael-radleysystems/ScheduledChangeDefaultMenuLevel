@@ -6,40 +6,66 @@ local nDinnerPage = 0;
 local bBreakfastDone = false;
 local bLunchDone = false;
 local bDinnerDone = false;
+local cBreakfastTime;
+local cLunchTime;
+local cDinnerTime;
 
 function OnInit()
 {
 	// timer once per minute
 	g_nTimerID = ICR_StartTimer(10000);
+	
+	cBreakfastTime = Time({hour = 06, min = 00, sec = 00});
+	cLunchTime = Time({hour = 11, min = 00, sec = 00});
+	cDinnerTime = Time({hour = 17, min = 00, sec = 00});
+	
+	
 }
 
 function OnTimer(nTimerID,nSysTimer)
-{
-	
+{	
 	// is it our timer?
 	if(nTimerID == g_nTimerID)
-	{
+	{		
+		print("Breakfast compared to now: "+cBreakfastTime.compareTo(Time(date())));		
+		
 		//TODO check the time set lunch page
-		if(bBreakfastDone)
+		print("Before Breakfast if Breakfast done: "+bBreakfastDone+" , Lunch done:"+bLunchDone+" , Dinner done:"+bDinnerDone);
+		if(!bBreakfastDone && (cLunchTime.compareTo(Time(date())) <= 0))
 		{
-			
+			print("In side breakfast done time: "+Time(date()).tostring());
+			bBreakfastDone = true;
+			bLunchDone = false;
+			return
 		}
 		
+		print(" After Breakfast if Breakfast done: "+bBreakfastDone+" , Lunch done:"+bLunchDone+" , Dinner done:"+bDinnerDone);
+		
 		//TODO check the time set dinner page
-		if(bLunchDone)
+		if(!bLunchDone && (cDinnerTime.compareTo(Time(date())) <= 0))
 		{
-			
+			print("In side lunch done time: "+Time(date()).tostring());
+			bLunchDone = true;
+			bDinnerDone = false;
+			return
 		}
+		
+		print(" After Lunch if Breakfast done: "+bBreakfastDone+" , Lunch done:"+bLunchDone+" , Dinner done:"+bDinnerDone);
 		
 		//TODO check the time
 		//reset lunch and dinner check
 		//set breakfast page
 		//set day check
-		if(bDinnerDone)
+		if(!bDinnerDone && (cBreakfastTime.compareTo(Time(date())) <= 0))
 		{
-			
+			print("In side dinner done time: "+Time(date()).tostring());
+			bDinnerDone = true;
+			bBreakfastDone = false;
+			return
 		}
-
+		
+		print(" After Dinner if Breakfast done: "+bBreakfastDone+" , Lunch done:"+bLunchDone+" , Dinner done:"+bDinnerDone);		
+		
 		/*
 		//Example for time checking
 		local tDate = date();
@@ -72,13 +98,16 @@ class Time
 
 	function compareTo(tTime)
 	{
+		print("Inside Time() this object: "+hour+":"+min+"."+sec+" compareTo passed in Time object: "+tTime.tostring());
 		if(hour < tTime.hour)
 		{
-			return -1; // return negative is this object is smaller
+			print("Inside hour < ");
+			return -1; // return negative is this object is smaller			
 		}
 		
 		if(hour > tTime.hour)
 		{
+			print("Inside hour > ");
 			return 1; // return positive is this object is bigger
 		}
 		
@@ -86,11 +115,13 @@ class Time
 		{
 			if(min < tTime.min)
 			{
+				print("Inside min < ");
 				return -1; // return negative is this object is smaller
 			}
 			
 			if(min > tTime.min)
 			{
+				print("Inside min > ");
 				return 1; // return positive is this object is bigger
 			}
 			
@@ -98,19 +129,50 @@ class Time
 			{
 				if(sec < tTime.sec)
 				{
+					print("Inside sec < ");
 					return -1; // return negative is this object is smaller
 				}
 				
 				if(sec > tTime.sec)
 				{
+					print("Inside sec > ");
 					return 1; // return positive is this object is bigger
 				}
 				
 				if(sec == tTime.sec)
 				{
+					print("Inside sec = ");
 					return 0; // return zero is this object is the same as the passed in object
 				}
 			}
+		}
+	}
+	
+	function addHour(nHour)
+	{
+		local nTempHour = hour + nHour;
+		
+		if(nTempHour > 23)
+		{
+			hour = 00;
+		}
+		else
+		{
+			hour = nTempHour;
+		}
+	}
+	
+	function minusHour(nHour)
+	{
+		local nTempHour = hour - nHour;
+		
+		if(nTempHour < 0)
+		{
+			hour = 00;
+		}
+		else
+		{
+			hour = nTempHour;
 		}
 	}
 	
