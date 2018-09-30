@@ -1,3 +1,6 @@
+
+local bDebugPrinting = false;
+
 local g_nTimerID;
 local g_tDateLastDone = {day = 0};
 local nBreakfastPage = 0;
@@ -22,7 +25,7 @@ function OnInit()
 	cHourBefore = Time(cBreakfastTime);
 	cHourBefore.minusHour(1);
 	
-	testBed();
+	//testBed();
 }
 
 function testBed()
@@ -32,7 +35,7 @@ function testBed()
 	local teaTime = {hours = 0, min = 0, sec = 0}
 	//cBreakfastTime.compareTo(teaTime);
 	print(cBreakfastTime.compareTo(cDinnerTime));
-	print("Hour before: "cHourBefore);
+	print("Hour before: "+cHourBefore);
 	
 }
 
@@ -71,7 +74,7 @@ function OnTimer(nTimerID,nSysTimer)
 		//reset lunch and dinner check
 		//set breakfast page
 		//set day check
-		if(!bDinnerDone && (cBreakfastTime.compareTo(Time(date())) <= 0))
+		if(!bDinnerDone && (cBreakfastTime.compareTo(Time(date())) <= 0) && (cHourBefore.compareTo(Time(date())) >=0) )
 		{
 			print("In side dinner done time: "+Time(date()).tostring());
 			bDinnerDone = true;
