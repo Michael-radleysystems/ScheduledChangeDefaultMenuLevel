@@ -12,7 +12,7 @@ local bDinnerDone = false;
 local cBreakfastTime;
 local cLunchTime;
 local cDinnerTime;
-local cHourBefore;
+local cDayEnd;
 local tDefaultMenuLevel ={DEFAULTMENULEVEL = 0};
 
 function OnInit()
@@ -31,8 +31,7 @@ function OnInit()
 	cBreakfastTime = Time({hour = 06, min = 00, sec = 00});
 	cLunchTime = Time({hour = 11, min = 00, sec = 00});
 	cDinnerTime = Time({hour = 17, min = 00, sec = 00});
-	cHourBefore = Time(cBreakfastTime);
-	cHourBefore.minusHour(1);
+	cDayEnd = Time({hour = 03, min = 00, sec = 00});	
 	
 	//testBed();
 }
@@ -44,7 +43,7 @@ function testBed()
 	local teaTime = {hours = 0, min = 0, sec = 0}
 	//cBreakfastTime.compareTo(teaTime);
 	print(cBreakfastTime.compareTo(cDinnerTime));
-	print("Hour before: "+cHourBefore);
+	print("Hour before: "+cDayEnd);
 	
 }
 
@@ -85,7 +84,7 @@ function OnTimer(nTimerID,nSysTimer)
 		//reset lunch and dinner check
 		//set breakfast page
 		//set day check
-		if(!bDinnerDone && (cBreakfastTime.compareTo(Time(date())) <= 0) && (cHourBefore.compareTo(Time(date())) >=0) )
+		if(!bDinnerDone && (cBreakfastTime.compareTo(Time(date())) <= 0) && (cDayEnd.compareTo(Time(date())) >=0) )
 		{
 			if(bDebugPrinting) print("In side dinner done time: "+Time(date()));
 			bDinnerDone = true;
