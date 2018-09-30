@@ -1,7 +1,7 @@
 # ScheduledChangeDefaultMenuLevel
 
-# Prototype : 
-This Etal is in the prototype stage. It also containt the prototype of the util class Time 
+# ! Prototype ! 
+## This Etal is in the prototype stage. It also containt the prototype of the util class Time 
 
 Etal for chnaging the default page level at different times of the day.
 
