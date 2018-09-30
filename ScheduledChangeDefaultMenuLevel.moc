@@ -15,7 +15,15 @@ local cDinnerTime;
 local cHourBefore;
 
 function OnInit()
-{
+{	
+	//debug console 
+    if(bDebugPrinting)
+    {
+        // only set these if debug printing is on, we don't want to set console to false as there's only one and it'll stop any script loaded earlier from using it.
+        ICR_SetFeature("CONSOLE",bDebugPrinting);
+        ICR_SetFeature("AUTORESTART",bDebugPrinting);
+    }
+	
 	// timer once per minute
 	g_nTimerID = ICR_StartTimer(10000);
 	
@@ -45,30 +53,30 @@ function OnTimer(nTimerID,nSysTimer)
 	// is it our timer?
 	if(nTimerID == g_nTimerID)
 	{		
-		print("Breakfast compared to now: "+cBreakfastTime.compareTo(Time(date())));		
+		if(bDebugPrinting) print("Breakfast compared to now: "+cBreakfastTime.compareTo(Time(date())));		
 		
 		//TODO check the time set lunch page
-		print("Before Breakfast if Breakfast done: "+bBreakfastDone+" , Lunch done:"+bLunchDone+" , Dinner done:"+bDinnerDone);
+		if(bDebugPrinting) print("Before Breakfast if Breakfast done: "+bBreakfastDone+" , Lunch done:"+bLunchDone+" , Dinner done:"+bDinnerDone);
 		if(!bBreakfastDone && (cLunchTime.compareTo(Time(date())) <= 0))
 		{
-			print("In side breakfast done time: "+Time(date()).tostring());
+			if(bDebugPrinting) print("In side breakfast done time: "+Time(date()).tostring());
 			bBreakfastDone = true;
 			bLunchDone = false;
 			return
 		}
 		
-		print(" After Breakfast if Breakfast done: "+bBreakfastDone+" , Lunch done:"+bLunchDone+" , Dinner done:"+bDinnerDone);
+		if(bDebugPrinting) print(" After Breakfast if Breakfast done: "+bBreakfastDone+" , Lunch done:"+bLunchDone+" , Dinner done:"+bDinnerDone);
 		
 		//TODO check the time set dinner page
 		if(!bLunchDone && (cDinnerTime.compareTo(Time(date())) <= 0))
 		{
-			print("In side lunch done time: "+Time(date()).tostring());
+			if(bDebugPrinting) print("In side lunch done time: "+Time(date()).tostring());
 			bLunchDone = true;
 			bDinnerDone = false;
 			return
 		}
 		
-		print(" After Lunch if Breakfast done: "+bBreakfastDone+" , Lunch done:"+bLunchDone+" , Dinner done:"+bDinnerDone);
+		if(bDebugPrinting) print(" After Lunch if Breakfast done: "+bBreakfastDone+" , Lunch done:"+bLunchDone+" , Dinner done:"+bDinnerDone);
 		
 		//TODO check the time
 		//reset lunch and dinner check
@@ -76,13 +84,13 @@ function OnTimer(nTimerID,nSysTimer)
 		//set day check
 		if(!bDinnerDone && (cBreakfastTime.compareTo(Time(date())) <= 0) && (cHourBefore.compareTo(Time(date())) >=0) )
 		{
-			print("In side dinner done time: "+Time(date()).tostring());
+			if(bDebugPrinting) print("In side dinner done time: "+Time(date()).tostring());
 			bDinnerDone = true;
 			bBreakfastDone = false;
 			return
 		}
 		
-		print(" After Dinner if Breakfast done: "+bBreakfastDone+" , Lunch done:"+bLunchDone+" , Dinner done:"+bDinnerDone);		
+		if(bDebugPrinting) print(" After Dinner if Breakfast done: "+bBreakfastDone+" , Lunch done:"+bLunchDone+" , Dinner done:"+bDinnerDone);		
 		
 		/*
 		//Example for time checking
@@ -118,16 +126,16 @@ class Time
 	{
 		if(tTime instanceof Time)
 		{
-			print("Inside Time() this object: "+hour+":"+min+"."+sec+" compareTo passed in Time object: "+tTime.tostring());
+			if(bDebugPrinting) print("Inside Time() this object: "+hour+":"+min+"."+sec+" compareTo passed in Time object: "+tTime.tostring());
 			if(hour < tTime.hour)
 			{
-				print("Inside hour < ");
+				if(bDebugPrinting) print("Inside hour < ");
 				return -1; // return negative is this object is smaller			
 			}
 			
 			if(hour > tTime.hour)
 			{
-				print("Inside hour > ");
+				if(bDebugPrinting) print("Inside hour > ");
 				return 1; // return positive is this object is bigger
 			}
 			
@@ -135,13 +143,13 @@ class Time
 			{
 				if(min < tTime.min)
 				{
-					print("Inside min < ");
+					if(bDebugPrinting) print("Inside min < ");
 					return -1; // return negative is this object is smaller
 				}
 				
 				if(min > tTime.min)
 				{
-					print("Inside min > ");
+					if(bDebugPrinting) print("Inside min > ");
 					return 1; // return positive is this object is bigger
 				}
 				
@@ -149,19 +157,19 @@ class Time
 				{
 					if(sec < tTime.sec)
 					{
-						print("Inside sec < ");
+						if(bDebugPrinting) print("Inside sec < ");
 						return -1; // return negative is this object is smaller
 					}
 					
 					if(sec > tTime.sec)
 					{
-						print("Inside sec > ");
+						if(bDebugPrinting) print("Inside sec > ");
 						return 1; // return positive is this object is bigger
 					}
 					
 					if(sec == tTime.sec)
 					{
-						print("Inside sec = ");
+						if(bDebugPrinting) print("Inside sec = ");
 						return 0; // return zero is this object is the same as the passed in object
 					}
 				}
