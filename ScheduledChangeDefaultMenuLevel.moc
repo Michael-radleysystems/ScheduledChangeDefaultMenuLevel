@@ -1,11 +1,11 @@
 
-local bDebugPrinting = false;
+local bDebugPrinting = true;
 
 local g_nTimerID;
 local g_tDateLastDone = {day = 0};
-local nBreakfastPage = 0;
-local nLunchPage = 0;
-local nDinnerPage = 0;
+local nBreakfastPage = 2;
+local nLunchPage = 3;
+local nDinnerPage = 4;
 local bBreakfastDone = false;
 local bLunchDone = false;
 local bDinnerDone = false;
@@ -13,7 +13,7 @@ local cBreakfastTime;
 local cLunchTime;
 local cDinnerTime;
 local cDayEnd;
-local tDefaultMenuLevel ={DEFAULTMENULEVEL = 0};
+local tDefaultMenuLevel ={DEFAULTMENULEVEL = 10};
 
 function OnInit()
 {	
@@ -26,12 +26,16 @@ function OnInit()
     }
 	
 	// timer once per minute
-	g_nTimerID = ICR_StartTimer(10000);
+	g_nTimerID = ICR_StartTimer(60000);
 	
 	cBreakfastTime = Time({hour = 06, min = 00, sec = 00});
 	cLunchTime = Time({hour = 11, min = 00, sec = 00});
-	cDinnerTime = Time({hour = 17, min = 00, sec = 00});
-	cDayEnd = Time({hour = 03, min = 00, sec = 00});	
+	cDinnerTime = Time({hour = 19, min = 45, sec = 00});
+	cDayEnd = Time({hour = 03, min = 00, sec = 00});
+	
+	nBreakfastPage = nBreakfastPage + 10;
+	nLunchPage = nLunchPage + 10;
+	nDinnerPage = nDinnerPage + 10;
 	
 	//testBed();
 }
@@ -44,6 +48,8 @@ function testBed()
 	//cBreakfastTime.compareTo(teaTime);
 	print(cBreakfastTime.compareTo(cDinnerTime));
 	print("Hour before: "+cDayEnd);
+	local tTempflags = ICR_GetPGMData(101, 1);
+	print("Default page number: "+tTempflags.DEFAULTMENULEVEL);
 	
 }
 
@@ -62,8 +68,7 @@ function OnTimer(nTimerID,nSysTimer)
 			if(bDebugPrinting) print("In side breakfast done time: "+Time(date()));
 			bBreakfastDone = true;
 			bLunchDone = false;
-			setDefaultMeunLevel(tSystemFlags, nBreakfastPage);
-			return
+			setDefaultMeunLevel(tDefaultMenuLevel, nBreakfastPage);
 		}
 		
 		if(bDebugPrinting) print(" After Breakfast if Breakfast done: "+bBreakfastDone+" , Lunch done:"+bLunchDone+" , Dinner done:"+bDinnerDone);
@@ -74,8 +79,7 @@ function OnTimer(nTimerID,nSysTimer)
 			if(bDebugPrinting) print("In side lunch done time: "+Time(date()));
 			bLunchDone = true;
 			bDinnerDone = false;
-			setDefaultMeunLevel(tSystemFlags, nLunchPage);
-			return
+			setDefaultMeunLevel(tDefaultMenuLevel, nLunchPage);
 		}
 		
 		if(bDebugPrinting) print(" After Lunch if Breakfast done: "+bBreakfastDone+" , Lunch done:"+bLunchDone+" , Dinner done:"+bDinnerDone);
@@ -89,8 +93,7 @@ function OnTimer(nTimerID,nSysTimer)
 			if(bDebugPrinting) print("In side dinner done time: "+Time(date()));
 			bDinnerDone = true;
 			bBreakfastDone = false;
-			setDefaultMeunLevel(tSystemFlags, nDinnerPage);
-			return
+			setDefaultMeunLevel(tDefaultMenuLevel, nDinnerPage);
 		}
 		
 		if(bDebugPrinting) print(" After Dinner if Breakfast done: "+bBreakfastDone+" , Lunch done:"+bLunchDone+" , Dinner done:"+bDinnerDone);		
@@ -113,7 +116,8 @@ function setDefaultMeunLevel(tSystemFlags, nPageNumber)
 	//Push the page number into our temp table
 	tSystemFlags.DEFAULTMENULEVEL <- nPageNumber;
 	//save the setting to the system file.
-	ICR_SetPGMData(101,1,tHotelServerDir);
+	ICR_SetPGMData(101,1,tSystemFlags);
+	if(bDebugPrinting) print("Default page number swapped to: "+nPageNumber);
 }
 
 /*
