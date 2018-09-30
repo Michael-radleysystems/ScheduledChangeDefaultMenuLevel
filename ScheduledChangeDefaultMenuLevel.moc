@@ -59,7 +59,7 @@ function OnTimer(nTimerID,nSysTimer)
 		if(bDebugPrinting) print("Before Breakfast if Breakfast done: "+bBreakfastDone+" , Lunch done:"+bLunchDone+" , Dinner done:"+bDinnerDone);
 		if(!bBreakfastDone && (cLunchTime.compareTo(Time(date())) <= 0))
 		{
-			if(bDebugPrinting) print("In side breakfast done time: "+Time(date()).tostring());
+			if(bDebugPrinting) print("In side breakfast done time: "+Time(date()));
 			bBreakfastDone = true;
 			bLunchDone = false;
 			return
@@ -70,7 +70,7 @@ function OnTimer(nTimerID,nSysTimer)
 		//TODO check the time set dinner page
 		if(!bLunchDone && (cDinnerTime.compareTo(Time(date())) <= 0))
 		{
-			if(bDebugPrinting) print("In side lunch done time: "+Time(date()).tostring());
+			if(bDebugPrinting) print("In side lunch done time: "+Time(date()));
 			bLunchDone = true;
 			bDinnerDone = false;
 			return
@@ -84,7 +84,7 @@ function OnTimer(nTimerID,nSysTimer)
 		//set day check
 		if(!bDinnerDone && (cBreakfastTime.compareTo(Time(date())) <= 0) && (cHourBefore.compareTo(Time(date())) >=0) )
 		{
-			if(bDebugPrinting) print("In side dinner done time: "+Time(date()).tostring());
+			if(bDebugPrinting) print("In side dinner done time: "+Time(date()));
 			bDinnerDone = true;
 			bBreakfastDone = false;
 			return
@@ -126,7 +126,7 @@ class Time
 	{
 		if(tTime instanceof Time)
 		{
-			if(bDebugPrinting) print("Inside Time() this object: "+hour+":"+min+"."+sec+" compareTo passed in Time object: "+tTime.tostring());
+			if(bDebugPrinting) print("Inside Time() this object: "+hour+":"+min+"."+sec+" compareTo passed in Time object: "+tTime);
 			if(hour < tTime.hour)
 			{
 				if(bDebugPrinting) print("Inside hour < ");
