@@ -1,5 +1,5 @@
 
-local bDebugPrinting = true;
+local bDebugPrinting = false;
 
 local g_nTimerID;
 local g_tDateLastDone = {day = 0};
@@ -14,6 +14,7 @@ local cLunchTime;
 local cDinnerTime;
 local cDayEnd;
 local tDefaultMenuLevel ={DEFAULTMENULEVEL = 10};
+local stime = 0
 
 function OnInit()
 {	
@@ -23,33 +24,29 @@ function OnInit()
         // only set these if debug printing is on, we don't want to set console to false as there's only one and it'll stop any script loaded earlier from using it.
         ICR_SetFeature("CONSOLE",bDebugPrinting);
         ICR_SetFeature("AUTORESTART",bDebugPrinting);
-    }
+    }	
 	
 	// timer once per minute
 	g_nTimerID = ICR_StartTimer(60000);
 	
 	cBreakfastTime = Time({hour = 06, min = 00, sec = 00});
+	cBreakfastTime.name = "breakfast";
 	cLunchTime = Time({hour = 11, min = 00, sec = 00});
+	cLunchTime.name = "lunch";
 	cDinnerTime = Time({hour = 19, min = 45, sec = 00});
 	cDayEnd = Time({hour = 03, min = 00, sec = 00});
 	
 	nBreakfastPage = nBreakfastPage + 10;
 	nLunchPage = nLunchPage + 10;
-	nDinnerPage = nDinnerPage + 10;
+	nDinnerPage = nDinnerPage + 10;	
 	
-	//testBed();
+	testBed();
 }
 
 function testBed()
 {
-	print("Printing Time class without explicit call of tostring: "+cBreakfastTime);
-	print("cBreakfastTime is instance of Time()"+ (cBreakfastTime instanceof Time));
-	local teaTime = {hours = 0, min = 0, sec = 0}
-	//cBreakfastTime.compareTo(teaTime);
-	print(cBreakfastTime.compareTo(cDinnerTime));
-	print("Hour before: "+cDayEnd);
-	local tTempflags = ICR_GetPGMData(101, 1);
-	print("Default page number: "+tTempflags.DEFAULTMENULEVEL);
+	cBreakfastTime.done <- true;
+	print(cBreakfastTime.done);
 	
 }
 
@@ -110,6 +107,20 @@ function OnTimer(nTimerID,nSysTimer)
 	}
 }
 
+function OnEnterPGMMenu(nSub)
+{
+	ICR_PurgeProgramSettings();
+	 switch(nSub)
+    {
+        case 0:
+			local nID = ICR_AdvertiseProgramSetting("Start Time", "stime");
+			ICR_ProgramItem_SetAltType(nID, 20);
+		default:
+            // in case we get somewhere we shouldn't
+            ICR_AdvertiseProgramHeading("This menu doesn't exist :(");
+            break;
+	}
+}
 // Function foe saving the new page to the system file
 function setDefaultMeunLevel(tSystemFlags, nPageNumber)
 {
@@ -130,13 +141,14 @@ class Time
 	hour = 0;
 	min = 0;
 	sec = 0;
+	name = null;
 	
 	constructor(tDate)
 	{
 		hour = tDate.hour;
 		min = tDate.min;
 		sec = tDate.sec;
-	}
+	}	
 
 	function compareTo(tTime)
 	{
@@ -228,6 +240,47 @@ class Time
 	function _tostring()
 	{
 		return hour+":"+min+"."+sec; // return contents as String
+	}
+	
+	//function to save locally
+	function ICR_Save(bCreateOnly)
+	{
+		local szhour = hour.tostring();
+		local szmin =""
+		
+		if(min<10)
+		{
+			szmin = "0"+min.tostring();
+		}
+		else
+		{
+			szmin = min.tostring();
+		}
+		
+		local sztime = szhour+""+szmin;
+		local ntime = sztime.tointeger();		
+		ICR_SetLocalUserData(name+".time",ntime,bCreateOnly);
+	}
+	
+	//function to load locally
+	function ICR_Load()
+	{
+		local sztime = "";
+		local szhour = "";
+		local szmin = "";
+		sztime = "" + ICR_GetLocalUserData(name+".time");
+		if(sztime.len()<4)
+		{
+			szhour = sztime.slice(0,1);
+			szmin = sztime.slice(1);
+		}
+		else
+		{
+			szhour = sztime.slice(0,2);
+			szmin = sztime.slice(2);
+		}
+		hour = szhour.tointeger();
+		min = szmin.tointeger();		
 	}
 }
 
